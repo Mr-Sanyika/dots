@@ -1,4 +1,11 @@
+# Source zshenv if it exists
+[[ -f ~/.zshenv ]] && source ~/.zshenv
+
 export EDITOR=nvim
+# Only define ZINIT_HOME if not already defined in zshenv
+if [[ -z "$ZINIT_HOME" ]]; then
+  export ZINIT_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/zinit/zinit.git"
+fi
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -24,9 +31,9 @@ bindkey "^[[A" history-beginning-search-backward
 bindkey "^[[B" history-beginning-search-forward
 
 ### Added by Zinit's installer
-if [[ -f $ZINIT_HOME ]]; then
-  mkdir -p $HOME/.local/share/zinit/zinit.git
-  command git clone https://github.com/zdharma-continuum/zinit $ZINIT_HOME
+if [[ ! -f $ZINIT_HOME/zinit.zsh ]]; then
+  mkdir -p "$(dirname $ZINIT_HOME)"
+  git clone https://github.com/zdharma-continuum/zinit "$ZINIT_HOME"
 fi
 
 source "$ZINIT_HOME/zinit.zsh"
@@ -59,5 +66,4 @@ alias lzg='lazygit'
 alias lzd='lazydocker'
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh 
